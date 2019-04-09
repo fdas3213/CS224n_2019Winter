@@ -6,7 +6,6 @@ import random
 from utils.gradcheck import gradcheck_naive
 from utils.utils import normalizeRows, softmax
 
-
 def sigmoid(x):
     """
     Compute the sigmoid function for the input here.
@@ -92,9 +91,11 @@ def negSamplingLossAndGradient(centerWordVec, outsideWordIdx,
     indices = [outsideWordIdx] + negSampleWordIndices
 
     ### YOUR CODE HERE
-
-    ### Please use your implementation of sigmoid in here.
-
+    first_part = -np.log2(sigmoid(outsideVectors[:, indices].T.dot(centerWordVec)))
+    sec_part = np.sum(np.log2(sigmoid(-outsideVectors[:, indices].T.dot(centerWordVec))))
+    loss = first_part - sec_part
+    gradCenterVec = - outsideVectors[:, indices]*(1-sigmoid(outsideVectors[:, indices].T.dot(centerWordVec))) + \
+            np.sum(outsideVectors[:, indices] * (1-sigmoid(-outsideVectors[:,indices].T.dot(centerWordVec))))
 
     ### END YOUR CODE
 
